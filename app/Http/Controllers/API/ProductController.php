@@ -5,10 +5,12 @@ namespace App\Http\Controllers\API;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\ProductRequest;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Resources\Product\ProductResource;
 use App\Http\Resources\Product\ProductCollection;
+use App\Exceptions\ProductNotBelongsToUserException;
 
 class ProductController extends Controller
 {
@@ -83,6 +85,8 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+        $this->authUserCheck($product);
+
         $product->update($request->all());
         return response()->json([
             'data' => new ProductResource($product)
@@ -97,7 +101,16 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        $this->authUserCheck($product);
+
         $product->delete();
         return response()->json(null, Response::HTTP_GONE);
+    }
+
+    public function authUserCheck($product)
+    {
+        if (Auth::user()->id != $product->user_id) {
+            throw new ProductNotBelongsToUserException();
+        }
     }
 }
