@@ -10,7 +10,6 @@ use App\Http\Requests\ProductRequest;
 use Symfony\Component\HttpFoundation\Response;
 use App\Http\Resources\Product\ProductResource;
 use App\Http\Resources\Product\ProductCollection;
-use App\Exceptions\ProductNotBelongsToUserException;
 
 class ProductController extends Controller
 {
@@ -105,12 +104,5 @@ class ProductController extends Controller
 
         $product->delete();
         return response()->json(null, Response::HTTP_GONE);
-    }
-
-    public function authUserCheck($product)
-    {
-        if (Auth::user()->id != $product->user_id) {
-            throw new ProductNotBelongsToUserException();
-        }
     }
 }

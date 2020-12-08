@@ -5,7 +5,7 @@ namespace App\Exceptions;
 use Exception;
 use Symfony\Component\HttpFoundation\Response;
 
-class ProductNotBelongsToUserException extends Exception
+class NotBelongsToUserException extends Exception
 {
     /**
      * Report the exception.
@@ -26,7 +26,7 @@ class ProductNotBelongsToUserException extends Exception
     public function render($request)
     {
         return response()->json([
-            'error' => 'Product not belongs to this user'
+            'error' => 'Data is not belongs to this user'
         ], Response::HTTP_NOT_FOUND);
     }
 }
